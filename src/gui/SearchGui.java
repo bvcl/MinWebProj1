@@ -67,13 +67,14 @@ public class SearchGui extends JFrame {
 		JButton btnNewButton = new JButton("Buscar");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(!model.isEmpty())model.clear();
 				String consulta [] = textField.getText().toLowerCase().split(" ");
 				for(int k =0;k<consulta.length;k++)System.out.println(consulta[k]);
 				int indice=0;
 				int i=0;
 				int j=0;
 				for(i=0;i<nomeDocs.size();i++){
-					String nomeDocumento = nomeDocs.get(i).toLowerCase();
+					String nomeDocumento = nomeDocs.get(i).toLowerCase();			
 					for(j=0;j<consulta.length;j++){
 						if(nomeDocumento.contains(consulta[j]) && !model.contains(nomeDocs.get(i))){
 							model.add(indice, nomeDocs.get(i));
