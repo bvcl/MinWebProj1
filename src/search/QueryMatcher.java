@@ -26,11 +26,12 @@ import basesutil.BasesDirectoriesUtil;
 public class QueryMatcher {
 	
 	private boolean stemming;
-	private boolean stopwords;
+	private boolean filterstopwords;
+	private IndexSearcher searcher;
 	
-	public QueryMatcher(boolean stemming, boolean stopwords) {
+	public QueryMatcher(boolean stemming, boolean filterstopwords) {
 		this.stemming = stemming;
-		this.stopwords = stopwords;
+		this.filterstopwords = filterstopwords;
 	}
 	
 	public TopDocs buildSearch(String query) throws Exception{
@@ -44,11 +45,11 @@ public class QueryMatcher {
 		
 		Analyzer analyzer;
 		
-		if(stemming && stopwords) {
+		if(stemming && filterstopwords) {
 			analyzer = new EnglishAnalyzer();
 		} else if (stemming) {
 			analyzer = new EnglishAnalyzer(new CharArraySet(0, false));
-		} else if (stopwords) {
+		} else if (filterstopwords) {
 			analyzer = new StandardAnalyzer();
 		} else {
 			analyzer = new StandardAnalyzer(new CharArraySet(0, false));
@@ -64,19 +65,23 @@ public class QueryMatcher {
 	private IndexSearcher createSearcher() throws IOException{
 		Path path;
 		
-		if(stemming && stopwords) {
-			path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_STEMMING_SW);
+		if(stemming && filterstopwords) {
+			path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_STEMMING_FILTERSW);
 		} else if (stemming) {
-			path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_STEMMING_NOSW);
-		} else if (stopwords) {
-			path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_NOSTEM_SW);
+			path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_STEMMING_NOFILTERSW);
+		} else if (filterstopwords) {
+			path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_NOSTEM_FILTERSW);
 		} else {
-			path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_NOSTEM_NOSW);
+			path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_NOSTEM_NOFILTERSW);
 		}
 		
 		Directory dir = FSDirectory.open(path);
 		IndexReader reader = DirectoryReader.open(dir);
 		IndexSearcher searcher = new IndexSearcher(reader);
 		return searcher;
+	}
+	
+	public IndexSearcher getSearcher() {
+		return this.searcher;
 	}
 }

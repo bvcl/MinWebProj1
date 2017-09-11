@@ -30,11 +30,11 @@ import basesutil.*;
 public class Indexer {
 	
 		private boolean stemming;
-		private boolean stopwords;
+		private boolean filterstopwords;
 	
-		public Indexer(boolean stemming, boolean stopwords) {
+		public Indexer(boolean stemming, boolean filterstopwords) {
 			this.stemming = stemming;
-			this.stemming = stopwords;
+			this.filterstopwords = filterstopwords;
 		}
 		
 		public void createBase(){
@@ -42,18 +42,18 @@ public class Indexer {
 			Path path;
 			try {
 				
-				if(stemming && stopwords) {
+				if(stemming && filterstopwords) {
 					analyzer = new EnglishAnalyzer();
-					path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_STEMMING_SW);
+					path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_STEMMING_FILTERSW);
 				} else if (stemming) {
 					analyzer = new EnglishAnalyzer(new CharArraySet(0, false));
-					path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_STEMMING_NOSW);
-				} else if (stopwords) {
+					path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_STEMMING_NOFILTERSW);
+				} else if (filterstopwords) {
 					analyzer = new StandardAnalyzer();
-					path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_NOSTEM_SW);
+					path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_NOSTEM_FILTERSW);
 				} else {
 					analyzer = new StandardAnalyzer(new CharArraySet(0, false));
-					path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_NOSTEM_NOSW);
+					path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_NOSTEM_NOFILTERSW);
 				}
 
 				

@@ -3,9 +3,9 @@ package basesutil;
 public class BasesDirectoriesUtil {
 	
 	public static final String DOCS_DIRECTORY = "docs";
-	public static final String INDEXED_BASE_STEMMING_NOSW = "IndexedBaseStemmingNoSW";
-	public static final String INDEXED_BASE_STEMMING_SW = "IndexedBaseStemmingSW";
-	public static final String INDEXED_BASE_NOSTEM_SW = "IndexedBaseNoStemSW";
-	public static final String INDEXED_BASE_NOSTEM_NOSW = "IndexedBaseNoStemNoSW";
+	public static final String INDEXED_BASE_STEMMING_NOFILTERSW = "IndexedBaseStemmingNoFilterSW";
+	public static final String INDEXED_BASE_STEMMING_FILTERSW = "IndexedBaseStemmingFilterSW";
+	public static final String INDEXED_BASE_NOSTEM_FILTERSW = "IndexedBaseNoStemFilterSW";
+	public static final String INDEXED_BASE_NOSTEM_NOFILTERSW = "IndexedBaseNoStemNoFilterSW";
 
 }
