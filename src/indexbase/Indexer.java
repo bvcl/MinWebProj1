@@ -41,24 +41,21 @@ public class Indexer {
 			Analyzer analyzer;
 			Path path;
 			try {
-
-				if(stemming) {
-					if(stopwords) {
-						analyzer = new EnglishAnalyzer();
-						path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_STEMMING_SW);
-					} else {
-						analyzer = new EnglishAnalyzer(new CharArraySet(0, false));
-						path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_STEMMING_NOSW);
-					}
+				
+				if(stemming && stopwords) {
+					analyzer = new EnglishAnalyzer();
+					path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_STEMMING_SW);
+				} else if (stemming) {
+					analyzer = new EnglishAnalyzer(new CharArraySet(0, false));
+					path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_STEMMING_NOSW);
+				} else if (stopwords) {
+					analyzer = new StandardAnalyzer();
+					path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_NOSTEM_SW);
 				} else {
-					if(stopwords) {
-						analyzer = new StandardAnalyzer();
-						path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_NOSTEM_SW);
-					} else {
-						analyzer = new StandardAnalyzer(new CharArraySet(0, false));
-						path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_NOSTEM_NOSW);
-					}
+					analyzer = new StandardAnalyzer(new CharArraySet(0, false));
+					path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_NOSTEM_NOSW);
 				}
+
 				
 				Directory outputDir = FSDirectory.open(path);
 				IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
