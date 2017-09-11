@@ -1,11 +1,15 @@
 package gui;
 
+import indexbase.Indexer;
+
+import java.awt.Desktop;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.LinkedList;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.DefaultListModel;
@@ -18,6 +22,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import org.apache.lucene.document.Document;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
+
+import search.QueryMatcher;
+
 public class SearchGui extends JFrame {
 	private DefaultListModel<String> model;
 	private JCheckBox chckbxNewCheckBox;
@@ -25,11 +35,6 @@ public class SearchGui extends JFrame {
 	private JList<String> list;
 	private JPanel contentPane;
 	private JTextField textField;
-	private LinkedList<String> nomeDocs;
-
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -44,14 +49,7 @@ public class SearchGui extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public SearchGui() {
-		nomeDocs = new LinkedList<String>();
-		nomeDocs.add("Programação em JavaScript D3");
-		nomeDocs.add("Programação em Java");
-		nomeDocs.add("Seres Vivos");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -68,20 +66,30 @@ public class SearchGui extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(!model.isEmpty())model.clear();
-				String consulta [] = textField.getText().toLowerCase().split(" ");
-				for(int k =0;k<consulta.length;k++)System.out.println(consulta[k]);
-				int indice=0;
-				int i=0;
-				int j=0;
-				for(i=0;i<nomeDocs.size();i++){
-					String nomeDocumento = nomeDocs.get(i).toLowerCase();			
-					for(j=0;j<consulta.length;j++){
-						if(nomeDocumento.contains(consulta[j]) && !model.contains(nomeDocs.get(i))){
-							model.add(indice, nomeDocs.get(i));
-							indice++;
-						}
+				
+				Indexer i = new Indexer(chckbxNewCheckBox.isSelected(), chckbxStoplist.isSelected());
+				QueryMatcher q = new QueryMatcher(chckbxNewCheckBox.isSelected(), chckbxStoplist.isSelected());
+				
+				i.createBase();
+				TopDocs td = null;
+				try {
+					td = q.buildSearch(textField.getText());
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				
+				int index = 0;
+				System.out.println(td.totalHits);
+				for (ScoreDoc sd : td.scoreDocs){
+		            Document d = null;
+					try {
+						d = q.getSearcher().doc(sd.doc);
+					} catch (IOException e1) {
+						e1.printStackTrace();
 					}
-				}		
+					model.add(index, "Path : "+  d.get("path") + ", Score : " + sd.score);
+					index++;
+		        }	
 			}
 		});
 		btnNewButton.setBounds(64, 63, 112, 38);
@@ -107,10 +115,17 @@ public class SearchGui extends JFrame {
 		    public void mouseClicked(MouseEvent evt) {
 		        JList list = (JList)evt.getSource();
 		        if (evt.getClickCount() == 2) {
-		        	System.out.println("Clicou "+list.getSelectedValue().toString());
+		        	String filePath = list.getSelectedValue().toString().substring(7, list.getSelectedValue().toString().indexOf(",")), rootPath = System.getProperty("user.dir");
+		        		if(filePath == null) return;
+						try {
+							Desktop.getDesktop().open(new File(rootPath+"/"+filePath));
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+		        	}
 		        }
-		    }
 		});
+
 	}
 	private class SwingAction extends AbstractAction {
 		public SwingAction() {

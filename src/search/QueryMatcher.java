@@ -77,7 +77,7 @@ public class QueryMatcher {
 		
 		Directory dir = FSDirectory.open(path);
 		IndexReader reader = DirectoryReader.open(dir);
-		IndexSearcher searcher = new IndexSearcher(reader);
+		this.searcher = new IndexSearcher(reader);
 		return searcher;
 	}
 	
