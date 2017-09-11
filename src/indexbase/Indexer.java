@@ -10,6 +10,8 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.CharArraySet;
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -23,18 +25,46 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import basesutil.*;
 
 public class Indexer {
+	
+		private boolean stemming;
+		private boolean stopwords;
+	
+		public Indexer(boolean stemming, boolean stopwords) {
+			this.stemming = stemming;
+			this.stemming = stopwords;
+		}
+		
 		public void createBase(){
 			Analyzer analyzer;
-			final Path inputDir = Paths.get("inputFiles");
+			Path path;
 			try {
-				Directory outputDir = FSDirectory.open(Paths.get("outputFiles"));
-				analyzer = new StandardAnalyzer();
+
+				if(stemming) {
+					if(stopwords) {
+						analyzer = new EnglishAnalyzer();
+						path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_STEMMING_SW);
+					} else {
+						analyzer = new EnglishAnalyzer(new CharArraySet(0, false));
+						path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_STEMMING_NOSW);
+					}
+				} else {
+					if(stopwords) {
+						analyzer = new StandardAnalyzer();
+						path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_NOSTEM_SW);
+					} else {
+						analyzer = new StandardAnalyzer(new CharArraySet(0, false));
+						path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_NOSTEM_NOSW);
+					}
+				}
+				
+				Directory outputDir = FSDirectory.open(path);
 				IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
 				iwc.setOpenMode(OpenMode.CREATE_OR_APPEND);
 				IndexWriter writer = new IndexWriter(outputDir, iwc);
-				index(writer, inputDir);
+				index(writer, Paths.get(BasesDirectoriesUtil.DOCS_DIRECTORY));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}  
