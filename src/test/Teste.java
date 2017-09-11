@@ -9,11 +9,11 @@ import indexbase.Indexer;
 
 public class Teste {
 	public static void main(String[] args) throws Exception {
-		Indexer i = new Indexer(true, true);
-		QueryMatcher q = new QueryMatcher(true, true);
+		Indexer i = new Indexer(false, false);
+		QueryMatcher q = new QueryMatcher(false, false);
 		
 		i.createBase();
-		TopDocs td = q.buildSearch("aggreable");
+		TopDocs td = q.buildSearch("DNA");
         
         System.out.println("Total Results :: " + td.totalHits);
          

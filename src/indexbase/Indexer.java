@@ -28,10 +28,11 @@ import org.apache.lucene.store.FSDirectory;
 import basesutil.*;
 
 public class Indexer {
-	
+
 		private boolean stemming;
 		private boolean filterstopwords;
-	
+		private IndexWriter writer;
+		
 		public Indexer(boolean stemming, boolean filterstopwords) {
 			this.stemming = stemming;
 			this.filterstopwords = filterstopwords;
@@ -60,8 +61,9 @@ public class Indexer {
 				Directory outputDir = FSDirectory.open(path);
 				IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
 				iwc.setOpenMode(OpenMode.CREATE_OR_APPEND);
-				IndexWriter writer = new IndexWriter(outputDir, iwc);
-				index(writer, Paths.get(BasesDirectoriesUtil.DOCS_DIRECTORY));
+				this.writer = new IndexWriter(outputDir, iwc);
+				index(this.writer, Paths.get(BasesDirectoriesUtil.DOCS_DIRECTORY));
+				this.writer.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}  
@@ -96,4 +98,5 @@ public class Indexer {
 				writer.updateDocument(new Term("path", file.toString()), doc);
 			}
 		}
+		
 }
