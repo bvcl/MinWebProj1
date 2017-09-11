@@ -35,6 +35,7 @@ public class SearchGui extends JFrame {
 	private JList<String> list;
 	private JPanel contentPane;
 	private JTextField textField;
+	private JTextField textField_1;
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -51,7 +52,7 @@ public class SearchGui extends JFrame {
 
 	public SearchGui() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 451, 335);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -65,8 +66,9 @@ public class SearchGui extends JFrame {
 		JButton btnNewButton = new JButton("Buscar");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(textField.getText().isEmpty())return;
 				if(!model.isEmpty())model.clear();
-				
+				//Setar o texto do texttField_1 seguindo o modelo => textField_1.setText("ola");
 				Indexer i = new Indexer(chckbxNewCheckBox.isSelected(), chckbxStoplist.isSelected());
 				QueryMatcher q = new QueryMatcher(chckbxNewCheckBox.isSelected(), chckbxStoplist.isSelected());
 				
@@ -110,6 +112,12 @@ public class SearchGui extends JFrame {
 		model = new DefaultListModel<String>();
 		list = new JList<String>(model);
 		scrollPane.setViewportView(list);
+		
+		textField_1 = new JTextField();
+		textField_1.setEditable(false);
+		textField_1.setBounds(39, 254, 340, 31);
+		contentPane.add(textField_1);
+		textField_1.setColumns(10);
 		
 		list.addMouseListener(new MouseAdapter() {
 		    public void mouseClicked(MouseEvent evt) {
