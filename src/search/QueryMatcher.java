@@ -1,6 +1,7 @@
 package search;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.swing.text.ChangedCharSetException;
 
@@ -19,6 +20,8 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+
+import basesutil.BasesDirectoriesUtil;
 
 public class QueryMatcher {
 	
@@ -59,7 +62,19 @@ public class QueryMatcher {
 	}
 	
 	private IndexSearcher createSearcher() throws IOException{
-		Directory dir = FSDirectory.open(Paths.get("indexedFiles"));
+		Path path;
+		
+		if(stemming && stopwords) {
+			path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_STEMMING_SW);
+		} else if (stemming) {
+			path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_STEMMING_NOSW);
+		} else if (stopwords) {
+			path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_NOSTEM_SW);
+		} else {
+			path = Paths.get(BasesDirectoriesUtil.INDEXED_BASE_NOSTEM_NOSW);
+		}
+		
+		Directory dir = FSDirectory.open(path);
 		IndexReader reader = DirectoryReader.open(dir);
 		IndexSearcher searcher = new IndexSearcher(reader);
 		return searcher;
