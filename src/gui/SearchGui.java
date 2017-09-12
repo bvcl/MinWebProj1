@@ -81,6 +81,8 @@ public class SearchGui extends JFrame {
 				
 				int index = 0;
 				System.out.println(td.totalHits);
+				Integer a = td.totalHits;
+				textField_1.setText(a.toString());
 				for (ScoreDoc sd : td.scoreDocs){
 		            Document d = null;
 					try {
