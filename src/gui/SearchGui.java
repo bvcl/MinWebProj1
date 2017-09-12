@@ -102,8 +102,8 @@ public class SearchGui extends JFrame {
 		chckbxNewCheckBox.setBounds(234, 59, 97, 16);
 		contentPane.add(chckbxNewCheckBox);
 		
-		chckbxStoplist = new JCheckBox("Stopword");
-		chckbxStoplist.setBounds(234, 85, 97, 16);
+		chckbxStoplist = new JCheckBox("Filter stopwords");
+		chckbxStoplist.setBounds(234, 85, 129, 16);
 		contentPane.add(chckbxStoplist);
 		
 		JScrollPane scrollPane = new JScrollPane();
