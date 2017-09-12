@@ -40,7 +40,6 @@ public class SearchGui extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					
 					SearchGui frame = new SearchGui();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -68,7 +67,7 @@ public class SearchGui extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if(textField.getText().isEmpty())return;
 				if(!model.isEmpty())model.clear();
-				//Setar o texto do texttField_1 seguindo o modelo => textField_1.setText("ola");
+				//Setar o texto do textField_1 seguindo o modelo => textField_1.setText("ola");
 				Indexer i = new Indexer(chckbxNewCheckBox.isSelected(), chckbxStoplist.isSelected());
 				QueryMatcher q = new QueryMatcher(chckbxNewCheckBox.isSelected(), chckbxStoplist.isSelected());
 				
